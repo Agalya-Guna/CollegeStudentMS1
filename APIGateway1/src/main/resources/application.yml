@@ -1,0 +1,22 @@
+server:
+  port: 8083
+  
+spring:
+  application:
+    name: API-GATEWAY
+    
+  cloud:
+    gateway:
+      routes:
+      - id: STUDENT-SERVICE
+        uri:
+          lb://STUDENT-SERVICE
+        predicates:
+        - Path=/student/**
+        
+        
+      - id: COLLEGE-SERVICE
+        uri:
+          lb://COLLEGE-SERVICE
+        predicates:
+        - Path=/college/**

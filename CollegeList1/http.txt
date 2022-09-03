@@ -1,0 +1,25 @@
+@Post
+http://localhost:8083/college/add
+{
+       "id":2,
+       "name":"SRM Institute of Technology",
+       "noOfStudents":4
+ }
+ http://localhost:8083/college/addlist
+ [ {
+       "id":3,
+       "name":"Sri Sairam Engineering College",
+       "noOfStudents":4
+ },
+ {
+       "id":4,
+       "name":"SSN Engineering College",
+       "noOfStudents":4
+ }
+]
+
+@Delete
+http://localhost:8083/college/delete/7
+
+@Get
+

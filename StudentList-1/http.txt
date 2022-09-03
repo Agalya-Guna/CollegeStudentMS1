@@ -1,0 +1,28 @@
+@Get
+http://localhost:8091/student/
+http://localhost:8091/student/id/3
+http://localhost:8091/student/stream/Arts
+http://localhost:8091/student/cid/1
+
+@Post
+http://localhost:8091/student/add
+  {
+        "age": 29,
+        "name": "Pragi",
+        "s_stream": "Commerce",
+        "collegeId": 2
+    }    
+    
+ @Delete
+ http://localhost:8091/student/delete/6
+ 
+ @Put
+ http://localhost:8091/student/update
+       {
+        "id":6,
+        "age": 22,
+        "name": "Pragathi",
+        "s_stream": "Commerce",
+        "collegeId":3
+       
+    }    
