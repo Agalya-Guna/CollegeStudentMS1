@@ -1,5 +1,6 @@
 package com.mindtree.college.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import com.mindtree.college.service.CollegeServiceImp;
 import com.mindtree.college.vo.CollegeVO;
 
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+
 @RestController
 @RequestMapping("/college")
 public class CollegeController {
@@ -29,6 +33,7 @@ public class CollegeController {
 	
 	@Autowired
 	RestTemplate restTemp;
+	private static final String COLLEGE="college";
 	
 	@PostMapping("/add")
 	public ResponseEntity<?> add(@RequestBody College college) {
@@ -60,19 +65,26 @@ public class CollegeController {
 	}
 	
 	@GetMapping("/ascname")
+	@CircuitBreaker(fallbackMethod = "handleStudentDownTime", name = COLLEGE)
 	 public ResponseEntity<List<CollegeVO>> StudentListByAscName(){
 		 try{
 			 List<CollegeVO> col=colService.StudentListByAscName();
-		 return new ResponseEntity<List<CollegeVO>>(col,HttpStatus.FOUND);
+		 return new ResponseEntity<List<CollegeVO>>(col,HttpStatus.OK);
     	}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} 
 	 }
+	 public ResponseEntity<List<CollegeVO>> handleStudentDownTime(Exception e){
+	     List<CollegeVO> col=colService.handleStudentDownTime(e);
+		 return new ResponseEntity<List<CollegeVO>>(col,HttpStatus.OK);
+	 }
+
 	@GetMapping("/descage/{stream}")
+	@CircuitBreaker(fallbackMethod = "handleStudentDownTime", name = "college")
 	public ResponseEntity<?> StudentListByDescAge(@PathVariable(value="stream") String stream){
 		try{
 			 List<CollegeVO> col=colService.StudentListByDescAge(stream);
-		 return new ResponseEntity<List<CollegeVO>>(col,HttpStatus.FOUND);
+		 return new ResponseEntity<List<CollegeVO>>(col,HttpStatus.OK);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} 
@@ -85,7 +97,7 @@ public class CollegeController {
 			return new ResponseEntity<College>(col, HttpStatus.CREATED);
 		}catch(Exception e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
+		} 
     }
 	 @DeleteMapping("/delete/{id}")
 	    public ResponseEntity<?> deleteStudent(@PathVariable(value = "id") int id){

@@ -48,20 +48,27 @@ public class CollegeServiceImp implements CollegeService {
 	public List<CollegeVO> StudentListByAscName() {
 		List<CollegeVO> fullList = this.getAll().stream().map(p -> {
 			College colg = p;
-		//	System.out.println(colg.getId());
 			List<Student> slist = Arrays.asList(restTemp
 					.getForEntity("http://STUDENT-SERVICE/student/cid/" + colg.getId(), Student[].class).getBody());
 			return new CollegeVO(colg, slist);
 		}).collect(Collectors.toList());
 		return fullList;
 	}
+	public List<CollegeVO> handleStudentDownTime(Exception e){
+		List<College> colleges=this.getAll();
+		List<CollegeVO> volist=new ArrayList<>();
+		for(College college:colleges) {
+			volist.add(new CollegeVO(college,null));
+		}
+		return volist;
+		}
 
 	@Override
 	public List<CollegeVO> StudentListByDescAge(String stream) {
 		List<CollegeVO> fulllist = this.getAll().stream().map(p -> {
 			College colg = p; 
 			List<Student> slist = Arrays.asList(
-					restTemp.getForEntity("http://STUDENT-SERVICE/student/"+ colg.getId() + stream, Student[].class).getBody());
+					restTemp.getForEntity("http://STUDENT-SERVICE/student/"+ colg.getId() +"/"+ stream, Student[].class).getBody());
 			return new CollegeVO(colg, slist);
 		}).collect(Collectors.toList());
 		return fulllist;
